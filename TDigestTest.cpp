@@ -18,8 +18,8 @@
 
 #include "glog/logging.h"
 #include "gtest/gtest.h"
-#include "tdigest2/TDigest.h"
-
+#include "TDigest.h"
+#include <random>
 namespace stesting {
 
 class TDigestTest : public ::testing::Test {
