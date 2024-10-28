@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef TDIGEST2_TDIGEST_H_
 #define TDIGEST2_TDIGEST_H_
 
@@ -24,7 +25,11 @@
 #include <queue>
 #include <utility>
 #include <vector>
-
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#include <fstream>
+#include <iostream>
 #include "glog/logging.h"
 
 namespace tdigest {
@@ -55,7 +60,11 @@ class Centroid {
       mean_ = c.mean_;
     }
   }
-
+  template<class Archive>
+  void serialize(Archive& ar, const unsigned int version) {
+    ar & mean_;
+    ar & weight_;
+  }
  private:
   Value mean_ = 0;
   Weight weight_ = 0;
@@ -384,6 +393,19 @@ class TDigest {
       }
     }
   }
+  template<class Archive>
+  void serialize(Archive& ar, const unsigned int version) {
+    ar & compression_;
+    ar & min_;
+    ar & max_;
+    ar & maxProcessed_;
+    ar & maxUnprocessed_;
+    ar & processedWeight_;
+    ar & unprocessedWeight_;
+    ar & processed_;
+    ar & unprocessed_;
+    ar & cumulative_;
+  }
 
  private:
   Value compression_;
@@ -620,8 +642,20 @@ class TDigest {
     const auto nextWeight = (index - previousIndex) / delta;
     return previousMean * previousWeight + nextMean * nextWeight;
   }
-};
 
+};
+void save_tdigest(const tdigest::TDigest& td, const std::string& filename) {
+  std::ofstream ofs(filename);
+  boost::archive::text_oarchive oa(ofs);
+  oa << td;
+}
+
+// Load function
+void load_tdigest(tdigest::TDigest& td, const std::string& filename) {
+  std::ifstream ifs(filename);
+  boost::archive::text_iarchive ia(ifs);
+  ia >> td;
+}
 }  // namespace tdigest2
 
 #endif  // TDIGEST2_TDIGEST_H_
