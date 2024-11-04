@@ -63,9 +63,28 @@
 
 //     std::cout << "Serialization test passed!" << std::endl;
 // }
+// int json(tdigest::TDigest& t){
+//   std::string s = t.serializeToJson();
+//   std::cout << s << std::endl;
+//   return 0;
+// }
+int write(std::string content, std::string file){
+
+    std::ofstream outFile(file); // Specify your file name here
+
+    // Check if the file is open
+    if (outFile.is_open()) {
+        outFile << content;
+        outFile.close();
+        std::cout << "Successfully written to the file." << std::endl;
+    } else {
+        std::cerr << "Unable to open the file." << std::endl;
+    }
+    return 0;
+}
 int main(){
   google::InitGoogleLogging("testing::TDigestTest");
-  tdigest::TDigest digest(1000);
+  tdigest::TDigest digest(100);
   std::uniform_real_distribution<> reals(0.0, 1.0);
   std::random_device gen;
   for (int i = 0; i < 100000; i++) {
@@ -73,18 +92,24 @@ int main(){
   }
   digest.compress();
   double quantiles[4] = {0.5, 0.8, 0.9, 0.99};
+  std::string json = digest.serializeToJson();
+  write(json, "tdigest.json");
+  
+  tdigest::TDigest t2 = tdigest::TDigest::deserializeFromJson(json);
   // Serialize (save to file)
-  save_tdigest(digest, "tdigest.txt");
-  for(int i = 0; i < sizeof(quantiles) / sizeof(quantiles[0]); i++){
-    std::cout << digest.quantile(quantiles[i]) << std::endl;
-  }
-  std::cout << "serialization done" << std::endl;
-  tdigest::TDigest digest2;
-  load_tdigest(digest2, "tdigest.txt");
-  for(int i = 0; i < sizeof(quantiles) / sizeof(quantiles[0]); i++){
-    std::cout << digest2.quantile(quantiles[i]) << std::endl;
+  // save_tdigest(digest, "tdigest.txt");
+  
+  // for(int i = 0; i < sizeof(quantiles) / sizeof(quantiles[0]); i++){
+  //   std::cout << digest.quantile(quantiles[i]) << std::endl;
+  // }
+  // std::cout << "serialization done" << std::endl;
+  // tdigest::TDigest digest2;
+  // load_tdigest(digest2, "tdigest.txt");
+  for(double i = 0; i < 100; i += 1){
+    std::cout << i << "%: " << digest.quantile(i/100) << "  "<< t2.quantile(i/100)<< std::endl;
   }
 }
+
 // int main() {
 //     // test_centroid_serialization();
 //     tdigest::Centroid c1(5.5, 10.0);

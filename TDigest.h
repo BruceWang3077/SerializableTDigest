@@ -18,7 +18,7 @@
 
 #ifndef TDIGEST2_TDIGEST_H_
 #define TDIGEST2_TDIGEST_H_
-
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <algorithm>
 #include <cfloat>
 #include <cmath>
@@ -30,6 +30,9 @@
 #include <boost/serialization/vector.hpp>
 #include <fstream>
 #include <iostream>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <sstream>
 #include "glog/logging.h"
 
 namespace tdigest {
@@ -118,6 +121,7 @@ class TDigest {
     unprocessed_.reserve(maxUnprocessed_ + 1);
   }
 
+
   TDigest(std::vector<Centroid>&& processed, std::vector<Centroid>&& unprocessed, Value compression,
           Index unmergedSize, Index mergedSize)
       : TDigest(compression, unmergedSize, mergedSize) {
@@ -133,6 +137,26 @@ class TDigest {
     updateCumulative();
   }
 
+    TDigest(Value compression,
+            Index maxUnprocessed,
+            Index maxProcessed,
+            std::vector<Centroid>&& processed,
+            std::vector<Centroid>&& unprocessed,
+            Value processedWeight,
+            Value unprocessedWeight,
+            Value min,
+            Value max)
+        : compression_(compression),
+          maxUnprocessed_(maxUnprocessed),
+          maxProcessed_(maxProcessed),
+          processed_(std::move(processed)),
+          unprocessed_(std::move(unprocessed)),
+          processedWeight_(processedWeight),
+          unprocessedWeight_(unprocessedWeight),
+          min_(min),
+          max_(max) {
+        updateCumulative();
+    }
   static Weight weight(std::vector<Centroid>& centroids) noexcept {
     Weight w = 0.0;
     for (auto centroid : centroids) {
@@ -405,6 +429,80 @@ class TDigest {
     ar & processed_;
     ar & unprocessed_;
     ar & cumulative_;
+  }
+  std::string serializeToJson() {
+    compress();
+    boost::property_tree::ptree root;
+
+    root.put("compression", compression_);
+    root.put("min", min_);
+    root.put("max", max_);
+    root.put("maxProcessed", maxProcessed_);
+    root.put("maxUnprocessed", maxUnprocessed_);
+    root.put("processedWeight", processedWeight_);
+    root.put("unprocessedWeight", unprocessedWeight_);
+
+    // Serialize vectors as JSON arrays
+    boost::property_tree::ptree processedArray;
+    for (const auto& centroid : processed_) {
+      boost::property_tree::ptree node;
+      node.put("mean", centroid.mean());
+      node.put("weight", centroid.weight());
+      processedArray.push_back(std::make_pair("", node));
+    }
+    root.add_child("processed", processedArray);
+
+
+    // boost::property_tree::ptree cumulativeArray;
+    // for (const auto& value : cumulative_) {
+    //   boost::property_tree::ptree node;
+    //   node.put("", value);
+    //   cumulativeArray.push_back(std::make_pair("", node));
+    // }
+    // root.add_child("cumulative", cumulativeArray);
+
+    // Convert to JSON string
+    std::ostringstream buffer;
+    boost::property_tree::write_json(buffer, root);
+    return buffer.str();
+  }
+
+  static TDigest deserializeFromJson(const std::string& jsonStr) {
+      using namespace boost::property_tree;
+      ptree pt;
+
+      // Parse JSON string into a property tree
+      std::istringstream jsonStream(jsonStr);
+      read_json(jsonStream, pt);
+
+      // Extract TDigest attributes
+      Value compression = pt.get<Value>("compression");
+      Index maxUnprocessed = pt.get<Index>("maxUnprocessed");
+      Index maxProcessed = pt.get<Index>("maxProcessed");
+      Value processedWeight = pt.get<Value>("processedWeight");
+      Value unprocessedWeight = pt.get<Value>("unprocessedWeight");
+      Value min = pt.get<Value>("min");
+      Value max = pt.get<Value>("max");
+
+      // Extract processed and unprocessed centroids
+      std::vector<Centroid> processed;
+      for (auto& item : pt.get_child("processed")) {
+          Value mean = item.second.get<Value>("mean");
+          Weight weight = item.second.get<Weight>("weight");
+          processed.emplace_back(mean, weight);
+      }
+
+      std::vector<Centroid> unprocessed;
+      // for (auto& item : pt.get_child("unprocessed")) {
+      //     Value mean = item.second.get<Value>("mean");
+      //     Weight weight = item.second.get<Weight>("weight");
+      //     unprocessed.emplace_back(mean, weight);
+      // }
+
+      // Create and return a TDigest object
+      return TDigest(compression, maxUnprocessed, maxProcessed,
+                   std::move(processed), std::move(unprocessed),
+                   processedWeight, unprocessedWeight, min, max);  // Ensure cumulative weights are updated
   }
 
  private:

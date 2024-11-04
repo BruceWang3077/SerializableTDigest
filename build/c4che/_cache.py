@@ -1,9 +1,9 @@
 AR = ['/usr/bin/ar']
 ARFLAGS = ['rcs']
 BINDIR = '/usr/local/bin'
-BOOST_VERSION = '1_71'
-BOOST_VERSION_NUMBER = 107100
-CC_VERSION = ('10', '5', '0')
+BOOST_VERSION = '1_74'
+BOOST_VERSION_NUMBER = 107400
+CC_VERSION = ('11', '4', '0')
 COMPILER_CXX = 'g++'
 CPPPATH_ST = '-I%s'
 CXX = ['/usr/bin/g++']
