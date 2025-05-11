@@ -1,0 +1,4 @@
+Quantile 50%: 176.864
+Quantile 90%: 229.849
+Quantile 95%: 230.444
+Quantile 99%: 231.123

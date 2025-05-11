@@ -7,3 +7,7 @@ This implementation batches all inserts, including merges.  This is an improveme
 This implementation does not support storing the incoming data with each centroid, (since obviously that is for testing).
 
 
+todo:
+- intro
+- running instruction
+- different test illustration

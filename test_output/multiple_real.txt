@@ -1,0 +1,4 @@
+Quantile 50%: 255.422
+Quantile 90%: 362.6481
+Quantile 95%: 366.6621
+Quantile 99%: 402.91700999999995

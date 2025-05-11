@@ -1,4 +1,4 @@
-# project  configured on Mon Nov  4 21:43:02 2024 by
+# project  configured on Sat May 10 21:25:17 2025 by
 # waf 2.0.19 (abi 20, python 30a0cf0 on linux)
 # using waf configure build
 #
@@ -10,7 +10,7 @@ Setting out to
 /home/users/cwang/tdigest/build
 ----------------------------------------
 Checking for 'g++' (C++ compiler)
-find program=['g++', 'c++'] paths=['/home/users/cwang/.vscode-server/cli/servers/Stable-b1c0a14de1414fcdaa400695b4db1c0799bc3124/server/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin', '/opt/puppetlabs/bin', '/home/users/cwang/janus/src/rrr/pylib', '/home/users/cwang/src'] var='CXX' -> ['/usr/bin/g++']
+find program=['g++', 'c++'] paths=['/home/users/cwang/verus/verus-x86-linux/', '/home/users/cwang/verus/verus-x86-linux/', '/home/users/cwang/.vscode-server/cli/servers/Stable-2fc07b811f760549dab9be9d2bedd06c51dfcb9a/server/bin/remote-cli', '/home/users/cwang/.cargo/bin', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin', '/opt/puppetlabs/bin', '/home/users/cwang/.vscode-server/extensions/ms-python.debugpy-2025.6.0-linux-x64/bundled/scripts/noConfigScripts', '/home/users/cwang/janus/src/rrr/pylib', '/home/users/cwang/src'] var='CXX' -> ['/usr/bin/g++']
 ['/usr/bin/g++', '-dM', '-E', '-']
 out: #define __SSP_STRONG__ 3
 #define __DBL_MIN_EXP__ (-1021)
@@ -380,7 +380,7 @@ out: #define __SSP_STRONG__ 3
 #define __ATOMIC_ACQ_REL 4
 #define __ATOMIC_RELEASE 3
 
-find program=['ar'] paths=['/home/users/cwang/.vscode-server/cli/servers/Stable-b1c0a14de1414fcdaa400695b4db1c0799bc3124/server/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin', '/opt/puppetlabs/bin', '/home/users/cwang/janus/src/rrr/pylib', '/home/users/cwang/src'] var='AR' -> ['/usr/bin/ar']
+find program=['ar'] paths=['/home/users/cwang/verus/verus-x86-linux/', '/home/users/cwang/verus/verus-x86-linux/', '/home/users/cwang/.vscode-server/cli/servers/Stable-2fc07b811f760549dab9be9d2bedd06c51dfcb9a/server/bin/remote-cli', '/home/users/cwang/.cargo/bin', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin', '/opt/puppetlabs/bin', '/home/users/cwang/.vscode-server/extensions/ms-python.debugpy-2025.6.0-linux-x64/bundled/scripts/noConfigScripts', '/home/users/cwang/janus/src/rrr/pylib', '/home/users/cwang/src'] var='AR' -> ['/usr/bin/ar']
 /usr/bin/g++
 ----------------------------------------
 Checking for library gtest
