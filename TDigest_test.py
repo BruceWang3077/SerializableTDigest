@@ -34,7 +34,7 @@ def deserialize_tdigest_from_folder(folder_path):
         merged_tdigest.merge(td)
     
     return merged_tdigest
-def create_tdigest_from_folder(folder_path):
+def process_folder(folder_path):
     tdigests = []
     
     # Read all data from CSV files in the folder and create a TDigest for each
@@ -187,13 +187,13 @@ def test_serialize_deserialize():
 
 
 if __name__ == "__main__":
-    # test_serialize_deserialize()
+    test_serialize_deserialize()
 
     # calculate_quantiles("./test_data/multiple","./test_output/multiple_real.txt")
     # calculate_quantiles("./test_data/single","./test_output/single_real.txt")
 
-    # write_quantiles_to_file(create_tdigest_from_folder("./test_data/multiple"), "./test_output/multiple_py.txt")
-    # write_quantiles_to_file(create_tdigest_from_folder("./test_data/single"), "./test_output/single_py.txt")
+    # write_quantiles_to_file(process_folder("./test_data/multiple"), "./test_output/multiple_py.txt")
+    # write_quantiles_to_file(process_folder("./test_data/single"), "./test_output/single_py.txt")
 
 
     # write_quantiles_to_file(deserialize_tdigest_from_folder("./test_output/serialized"), './test_output/aws_simulate_py.txt')

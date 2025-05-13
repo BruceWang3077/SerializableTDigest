@@ -316,7 +316,12 @@ class TDigest:
         tdigest.update_cumulative()
         
         return tdigest
-
+    @staticmethod
+    def deserialize_file(file_path: str) -> 'TDigest':
+        json_str = TDigest.read_file(file_path)
+        return TDigest.deserialize(json_str)
+    
+    
     @staticmethod
     def read_file(filename: str) -> str:
         """Reads the content of a file and returns it as a string."""
@@ -328,9 +333,7 @@ class TDigest:
         """Merges TDigest objects from a list of JSON file paths using multi-threading for efficiency.
         TODO: seems the current code doesn't improve the performance
         """
-        def deserialize_file(file_path: str) -> 'TDigest':
-            json_str = TDigest.read_file(file_path)
-            return TDigest.deserialize(json_str)
+
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             tdigests = list(executor.map(deserialize_file, file_paths))
